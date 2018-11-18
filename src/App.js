@@ -3,6 +3,8 @@ import './App.css';
 import Cookies from 'js-cookie';
 import FileSize from 'file-size';
 
+const PROXY_PATH = process.env.NODE_ENV === 'production' ? '/proxy' : '';
+
 class App extends Component {
   state = {
     temporaryClientID: '',
@@ -96,7 +98,7 @@ class App extends Component {
 
   getAccessToken = (clientID) => {
     if (Cookies.get('accessToken') == null) {
-      return fetch(`http://localhost:3000/oauth/pin?client_id=${clientID}`)
+      return fetch(`${PROXY_PATH}/oauth/pin?client_id=${clientID}`)
         .then(resp => resp.json())
         .then(data => {
           this.setState({
@@ -110,7 +112,7 @@ class App extends Component {
           const start = Date.now();
           const isOverTime = () => (Date.now() - start > data.expires_in * 1000);
           let timer = setInterval(() => {
-          fetch(`http://localhost:3000/oauth/pin/${data.user_code}?client_id=${clientID}`)
+          fetch(`${PROXY_PATH}/oauth/pin/${data.user_code}?client_id=${clientID}`)
             .then(resp => resp.json())
             .then(data => {
               if (data.result === 'OK') {
@@ -137,7 +139,7 @@ class App extends Component {
   }
 
   loadMovies = ({clientID, accessToken}) => {
-    return fetch(`http://localhost:3000/sync/all-items/movies/plantowatch`, {
+    return fetch(`${PROXY_PATH}/sync/all-items/movies/plantowatch`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
