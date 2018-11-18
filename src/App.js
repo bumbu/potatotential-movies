@@ -23,6 +23,7 @@ class App extends Component {
     return (
       <div className="App">
         {this.state.askForClientId ? <div>
+          <div>Go to <a href="https://simkl.com/settings/developer/" target="_blank">simkl.com/settings/developer/</a>, create a new app (with PIN auth) and past the client ID here</div>
           Client ID: <input
             type="text"
             value={this.state.temporaryClientID}
